@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model game {
+  id              Int      @id @default(autoincrement())
+  userId          Int?
+  title           String?
+  description     String?
+  gameType        String?
+  state           String?
+  dateTime        String?
+  paidEvent       Boolean?
+  entryPrice      Int?
+  locationName    String?
+  address         String?
+  firstName       String?
+  email           String?
+  phoneNumber     String?
+  acceptedPayment String[]
+}
+
+model operators {
+  id        Int       @id @default(autoincrement())
+  firstName String    @db.VarChar(255)
+  lastName  String    @db.VarChar(255)
+  email     String    @db.VarChar(255)
+  password  String    @db.VarChar(400)
+  userName  String    @db.VarChar(80)
+  product   product[]
+}
+
+model product {
+  id            Int        @id @default(autoincrement())
+  title         String     @db.VarChar(100)
+  description   String     @db.VarChar(800)
+  category      String
+  salePrice     String
+  condition     String
+  contactMethod String
+  firstName     String     @db.VarChar(150)
+  email         String     @db.VarChar(200)
+  phoneNumber   String     @db.VarChar(200)
+  zipCode       BigInt
+  city          String
+  state         String
+  media         String?
+  userid        Int?
+  views         BigInt?
+  favorites     BigInt?
+  operators     operators? @relation(fields: [userid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "operator")
+}

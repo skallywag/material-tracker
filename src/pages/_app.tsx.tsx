@@ -13,10 +13,12 @@ import {
   Box
 } from "@mantine/core";
 import "../styles/globals.css";
+import { ToastContainer } from "react-toastify";
 
 export default function _appTsx({ Component, pageProps }: AppProps) {
   return (
     <MantineProvider>
+      <ToastContainer theme={"dark"} progressStyle={{ backgroundColor: "orange" }} />
       <AppShell
         layout="alt"
         padding="md"

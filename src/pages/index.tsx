@@ -3,10 +3,11 @@ import "@mantine/dates/styles.css";
 import {
   Box,
   Button,
-  Flex
+  Flex,
 } from "@mantine/core";
+  import { toast } from 'react-toastify';
+  import 'react-toastify/dist/ReactToastify.css';
 import RollCard from "@/components/rollCard";
-import type { RollData } from "@/components/rollCard";
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 
 export interface Roll {
@@ -27,7 +28,7 @@ useEffect(() => {
 
 
 const updateRoll = (updatedRollData) => {
-
+  
   setRolls((prevRolls) => {
     const updatedRolls = prevRolls.map(roll =>
       roll.id === updatedRollData.id ? { ...roll, ...updatedRollData } : roll
@@ -35,6 +36,7 @@ const updateRoll = (updatedRollData) => {
     localStorage.setItem('rolls', JSON.stringify(updatedRolls));
     return updatedRolls;
   });
+  toast("Roll Updated!")
 };
 
 const handleAddRoll = () => {
@@ -60,7 +62,7 @@ const handleAddRoll = () => {
       </Button>
 
       <Flex direction="column" gap={8}>
-        {rolls ? rolls.map((item, index) => (
+        {rolls ? rolls.map((item) => (
           <RollCard 
           id={item.id}
           key={item.id} 

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState } from "react";
 import "@mantine/dates/styles.css";
 import {
   Box,
@@ -26,8 +25,8 @@ interface RollCardProps {
 const RollCard: React.FC<RollCardProps> = (props) => {
      const form = useForm({
     initialValues: {
-      rollItemNumber: "",
-      rollLength: "",
+      rollItemNumber: props.rollData.rollItemNumber || "",
+      rollLength: props.rollData.rollLength || "",
     },
     validate: {
       rollItemNumber: (value) =>

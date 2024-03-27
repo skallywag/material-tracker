@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "@mantine/dates/styles.css";
 import {
   Box,
@@ -7,46 +7,71 @@ import {
 } from "@mantine/core";
 import RollCard from "@/components/rollCard";
 import type { RollData } from "@/components/rollCard";
+import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 
-
-interface Roll {
+export interface Roll {
   id: number;
   rollItemNumber: '';
   rollLength: ''
 }
 
 const TrackerPage = () => {
-  const [rolls, setRolls] = useState<Roll[]>([]);
+const [rolls, setRolls] = useState([]);
 
-  function handleAddRoll(){
-    setRolls([
-						...rolls,
-									{
-										id: rolls.length + 1,
-										rollItemNumber: '',
-										rollLength: '',
-									}
-								]);
+useEffect(() => {
+  if (typeof window !== 'undefined') {
+    const storedRolls = JSON.parse(localStorage.getItem('rolls') || '[]');
+    setRolls(storedRolls);
   }
+}, []);
 
-  function handleDeleteRoll(item: number) {    
-      const newRolls = rolls.filter(
-							(roll: RollData) => roll.id !== item
-              );
-              setRolls(newRolls);
-  }
 
+const updateRoll = (updatedRollData) => {
+
+  setRolls((prevRolls) => {
+    const updatedRolls = prevRolls.map(roll =>
+      roll.id === updatedRollData.id ? { ...roll, ...updatedRollData } : roll
+    );
+    localStorage.setItem('rolls', JSON.stringify(updatedRolls));
+    return updatedRolls;
+  });
+};
+
+const handleAddRoll = () => {
+  setRolls(prevRolls => {
+    const newRoll = {
+      id: uuidv4(),
+      rollItemNumber: '',
+      rollLength: '',
+    };
+
+    const updatedRolls = [...prevRolls, newRoll];
+    localStorage.setItem("rolls", JSON.stringify(updatedRolls));
+    return updatedRolls;
+  });
+};
+
+  
   return (
     <Box className="page">
       <Button mb={10} className="bg-accentError"
-      onClick={() => handleAddRoll()}>
+        onClick={() => handleAddRoll()}>
         Add New Roll
       </Button>
 
       <Flex direction="column" gap={8}>
         {rolls ? rolls.map((item, index) => (
-            <RollCard id={index} key={item.id} rollData={item} onDelete={() => handleDeleteRoll(item.id)}
-					
+          <RollCard 
+          id={item.id}
+          key={item.id} 
+          onUpdate={updateRoll}
+          rollData={item}
+        	onDelete={() => {
+						const newRolls = rolls.filter(
+							(roll: Roll) => roll.id !== item.id
+						);
+						setRolls(newRolls);
+					}}
 					/>
         )) : null}
       </Flex>

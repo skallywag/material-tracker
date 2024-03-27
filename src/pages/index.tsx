@@ -43,6 +43,7 @@ const handleAddRoll = () => {
   setRolls(prevRolls => {
     const newRoll = {
       id: uuidv4(),
+      rollNumber: rolls.length + 1,
       rollItemNumber: '',
       rollLength: '',
     };
@@ -53,6 +54,15 @@ const handleAddRoll = () => {
   });
 };
 
+function addTotalLength() {
+let totalSum = 0;
+
+rolls.forEach(obj => {
+  totalSum += Number(obj.rollLength.replace(',', ''))
+});
+
+console.log(totalSum);
+}
   
   return (
     <Box className="page">
@@ -69,14 +79,17 @@ const handleAddRoll = () => {
           onUpdate={updateRoll}
           rollData={item}
         	onDelete={() => {
-						const newRolls = rolls.filter(
+              const upDatedRolls = rolls.filter(
 							(roll: Roll) => roll.id !== item.id
 						);
-						setRolls(newRolls);
+            localStorage.setItem("rolls", JSON.stringify(upDatedRolls));
+						setRolls(upDatedRolls);
+            toast("Roll Deleted!")
 					}}
 					/>
         )) : null}
       </Flex>
+      <Button bg={"blue"} onClick={() => addTotalLength()}>End Job</Button>
     </Box>
   );
 };

@@ -11,6 +11,7 @@ import { IconX } from "@tabler/icons-react";
 
 export interface RollData {
 	id?: number;
+  rollNumber: number;
 	rollItemNumber: string;
 	rollLength: string;
 }
@@ -38,7 +39,7 @@ const RollCard: React.FC<RollCardProps> = (props) => {
  
   return (
     <Box className="bg-primaryOrange max-w-72 rounded-md relative p-8">
-      <Text size="24px" mb={2}>Roll {}</Text>
+      <Text size="24px" mb={6}>Roll {props.rollData.rollNumber}</Text>
 
       <IconX
         className="absolute right-2 top-2 cursor-pointer hover:text-accentError"

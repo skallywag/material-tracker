@@ -4,11 +4,15 @@ import {
   Box,
   Button,
   Flex,
+  Input,
+  Title,
 } from "@mantine/core";
   import { toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import RollCard from "@/components/rollCard";
 import { v4 as uuidv4 } from 'uuid'; // Import UUID library
+
+
 
 export interface Roll {
   id: number;
@@ -17,11 +21,11 @@ export interface Roll {
 }
 
 const TrackerPage = () => {
-const [rolls, setRolls] = useState([]);
+const [rolls, setRolls] = useState<Roll[]>([]);
 
 useEffect(() => {
   if (typeof window !== 'undefined') {
-    const storedRolls = JSON.parse(localStorage.getItem('rolls') || '[]');
+    const storedRolls: Roll[] = JSON.parse(localStorage.getItem('rolls') || '[]');
     setRolls(storedRolls);
   }
 }, []);
@@ -54,18 +58,19 @@ const handleAddRoll = () => {
   });
 };
 
-function addTotalLength() {
-let totalSum = 0;
+// function addTotalLength() {
+//   const totalSum = rolls.reduce((sum, obj) => {
+//     const numericValue = Number(obj.rollLength.replace(',', ''));
+//     return sum + (isNaN(numericValue) ? 0 : numericValue);
+//   }, 0);
 
-rolls.forEach(obj => {
-  totalSum += Number(obj.rollLength.replace(',', ''))
-});
-
-console.log(totalSum);
-}
+//   console.log(totalSum);
+// }
   
   return (
     <Box className="page">
+    <Box className='test'>
+      <Box>
       <Button mb={10} className="bg-accentError"
         onClick={() => handleAddRoll()}>
         Add New Roll
@@ -89,7 +94,13 @@ console.log(totalSum);
 					/>
         )) : null}
       </Flex>
+      </Box>
+      <Box>
+        <Title>Total Footage</Title>
+        <Input placeholder="Total Job Footage"/>
       <Button bg={"blue"} onClick={() => addTotalLength()}>End Job</Button>
+      </Box>
+      </Box>
     </Box>
   );
 };

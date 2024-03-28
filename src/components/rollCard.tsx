@@ -8,10 +8,12 @@ import {
 } from "@mantine/core";
 import {useForm} from '@mantine/form'
 import { IconX } from "@tabler/icons-react";
+import { useDisclosure } from '@mantine/hooks';
+import DeleteRollModal from '../modals/deleteRollModal/DeleteRollModal'
 
 export interface RollData {
-	id?: number;
-  rollNumber: number;
+	id: number;
+  rollNumber?: number;
 	rollItemNumber: string;
 	rollLength: string;
 }
@@ -20,10 +22,12 @@ interface RollCardProps {
   id: number;
   rollData: RollData
   onDelete: () => void;
-  onUpdate: ({}) => void;
+  onUpdate: (value: RollData) => void;
 }
 
 const RollCard: React.FC<RollCardProps> = (props) => {
+  const [opened, { open, close }] = useDisclosure(false);
+  
      const form = useForm({
     initialValues: {
       rollItemNumber: props.rollData.rollItemNumber || "",
@@ -39,12 +43,14 @@ const RollCard: React.FC<RollCardProps> = (props) => {
  
   return (
     <Box className="bg-primaryOrange max-w-72 rounded-md relative p-8">
-      <Text size="24px" mb={6}>Roll {props.rollData.rollNumber}</Text>
 
+
+      <DeleteRollModal title={"Confirm Deletion"} onDelete={props.onDelete} opened={opened} open={open} close={close}/>
+      <Text size="24px" mb={6}>Roll {props.rollData.rollNumber}</Text>
       <IconX
         className="absolute right-2 top-2 cursor-pointer hover:text-accentError"
         onClick={
-          props.onDelete
+          () => open()
         }
       />
       <Box>

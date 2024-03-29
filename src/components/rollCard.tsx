@@ -4,7 +4,9 @@ import {
   Box,
   Input,
   Button,
-  Text
+  Text,
+  Pill,
+  Flex
 } from "@mantine/core";
 import {useForm} from '@mantine/form'
 import { IconX } from "@tabler/icons-react";
@@ -12,17 +14,18 @@ import { useDisclosure } from '@mantine/hooks';
 import DeleteRollModal from '../modals/deleteRollModal/DeleteRollModal'
 
 export interface RollData {
-	id: number;
+	id: string;
+  saved: boolean;
   rollNumber?: number;
 	rollItemNumber: string;
 	rollLength: string;
 }
 
 interface RollCardProps {
-  id: number;
+  id:string;
   rollData: RollData
   onDelete: () => void;
-  onUpdate: (value: RollData) => void;
+  onUpdate: (value) => void;
 }
 
 const RollCard: React.FC<RollCardProps> = (props) => {
@@ -42,21 +45,25 @@ const RollCard: React.FC<RollCardProps> = (props) => {
 
  
   return (
-    <Box className="bg-primaryOrange max-w-72 rounded-md relative p-8">
-
-
-      <DeleteRollModal title={"Confirm Deletion"} onDelete={props.onDelete} opened={opened} open={open} close={close}/>
-      <Text size="24px" mb={6}>Roll {props.rollData.rollNumber}</Text>
+    <Box className="bg-primaryOrange max-w-72 rounded-md pt-8 pr-10 pl-10 pb-8">
+      <Flex  mb={20} justify={"space-between"}>
+      <Pill size={"lg"} bg={props.rollData.saved ? "green" : "red"}>{props.rollData.saved ? "Saved" : "Unsaved"}</Pill>
       <IconX
-        className="absolute right-2 top-2 cursor-pointer hover:text-accentError"
+        className="cursor-pointer hover:text-accentError"
         onClick={
           () => open()
         }
       />
+
+      </Flex>
+
+      <DeleteRollModal title={"Confirm Deletion"} onDelete={props.onDelete} opened={opened} open={open} close={close}/>
+      <Text size="24px" mb={6}>Roll {props.rollData.rollNumber}</Text>
       <Box>
         <form  onSubmit={form.onSubmit(() => {
               props.onUpdate({ 
               id: props.id,
+              saved: true,
               rollItemNumber: form.values.rollItemNumber,
               rollLength: form.values.rollLength,
                 })

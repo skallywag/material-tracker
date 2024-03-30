@@ -16,6 +16,7 @@ import DeleteRollModal from '../modals/deleteRollModal/DeleteRollModal'
 export interface RollData {
 	id: string;
   saved: boolean;
+  rejected?: boolean;
   rollNumber?: number;
 	rollItemNumber: string;
 	rollLength: string;
@@ -26,6 +27,7 @@ interface RollCardProps {
   rollData: RollData
   onDelete: () => void;
   onUpdate: (value) => void;
+  onReject: (value) => void;
 }
 
 const RollCard: React.FC<RollCardProps> = (props) => {
@@ -45,20 +47,24 @@ const RollCard: React.FC<RollCardProps> = (props) => {
 
  
   return (
-    <Box className="bg-primaryOrange max-w-72 rounded-md pt-6 pr-10 pl-10 pb-6">
-      <Flex  mb={20} justify={"space-between"}>
-      <Pill size={"lg"} bg={props.rollData.saved ? "green" : "red"}>{props.rollData.saved ? "Saved" : "Unsaved"}</Pill>
-      <IconX
+    <Box className="bg-primaryOrange max-w-72 rounded-md p-8">
+
+      <Flex mb={14} style={{borderBottom: "2px solid black"}} justify={"space-between"}>
+        <Text size="24px">Roll {props.rollData.rollNumber}</Text>
+          <IconX
         className="cursor-pointer hover:text-accentError"
         onClick={
           () => open()
         }
       />
-
       </Flex>
-
+  
+      <Flex mb={8} justify={"space-between"}>
+      <Pill size={"lg"} bg={props.rollData.saved ? "green" : "red"}>{props.rollData.saved ? "Saved" : "Unsaved"}</Pill>
+      {props.rollData.rejected && <Pill size="lg" bg={"red"}>Rejected</Pill>}      
+      </Flex>
+     
       <DeleteRollModal title={"Confirm Deletion"} onDelete={props.onDelete} opened={opened} open={open} close={close}/>
-      <Text size="24px" mb={6}>Roll {props.rollData.rollNumber}</Text>
       <Box>
         <form  onSubmit={form.onSubmit(() => {
               props.onUpdate({ 
@@ -71,7 +77,10 @@ const RollCard: React.FC<RollCardProps> = (props) => {
         >
         <Input mb={10} placeholder="Item Number" {...form.getInputProps("rollItemNumber")} />
         <Input mb={12} placeholder="Roll Length" {...form.getInputProps("rollLength")}/>
+        <Flex justify={"space-around"}>
         <Button bg={'red'} type="submit">{props.rollData.saved ? "Update" : "Save"}</Button>
+       { props.rollData.rejected ? null : <Button bg={"red"} onClick={() => props.onReject({ ...props.rollData, rejected: true })}>Reject</Button>}
+        </Flex>
         </form>
       </Box>
     </Box>

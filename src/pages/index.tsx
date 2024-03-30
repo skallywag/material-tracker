@@ -17,6 +17,7 @@ import { v4 as uuidv4 } from 'uuid'; // Import UUID library
 export interface Roll {
   id: string;
   saved: boolean;
+  rejected: boolean;
   rollNumber?: number;
   rollItemNumber: '';
   rollLength: ''
@@ -51,6 +52,17 @@ function updateRoll(updatedRollData: Roll){
     return updatedRolls;
   });
   toast("Roll Updated!")
+}
+
+function rejectRoll(updatedRollData: Roll){
+  setRolls((prevRolls: Roll[]) => {
+    const updatedRolls = prevRolls.map(roll =>
+      roll.id === updatedRollData.id ? { ...roll, ...updatedRollData } : roll
+    );
+    localStorage.setItem('rolls', JSON.stringify(updatedRolls));
+    return updatedRolls;
+  });
+  toast("Roll Rejected!")
 };
 
 const handleAddRoll = (): void => {
@@ -58,6 +70,7 @@ const handleAddRoll = (): void => {
       const newRoll: Roll = {
         id: uuidv4(),
         saved: false,
+        rejected: false,
         rollNumber: rolls.length + 1,
         rollItemNumber: '',
         rollLength: '',
@@ -98,6 +111,7 @@ function addTotalLength() {
           id={item.id}
           key={item.id} 
           onUpdate={updateRoll}
+          onReject={rejectRoll}
           rollData={item}
         	onDelete={() => {
               const upDatedRolls = rolls.filter(
@@ -111,7 +125,10 @@ function addTotalLength() {
         )) : null}
       </Flex>
       </Box>
-  
+       <Flex direction="column" gap={8}>
+      <Text size='30px'>Rejected Rolls:</Text>
+        
+      </Flex>
       <Box mr={"100px"}>
         <Title>CO-</Title>
         <Title mb={2} size={16}>Total Footage Ran</Title>
@@ -121,7 +138,6 @@ function addTotalLength() {
         <Input mb={12} type='number' placeholder="Total Job Footage" {...form.getInputProps("jobLength")}/>
         <Button mb={20} bg={"blue"} type='submit'>End Job</Button>
         </form>
-      {<Box><Text>Roll length: {jobData}</Text></Box>}
       </Box>
       </Box>
     </Box>

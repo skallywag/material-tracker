@@ -70,14 +70,20 @@ const handleAddRoll = (): void => {
   };
 
 function addTotalLength() {
-  const totalSum = rolls.reduce((sum, obj) => {
-    const numericValue = Number(obj.rollLength.replace(',', ''));
-    return sum + (isNaN(numericValue) ? 0 : numericValue);
-  }, 0);
+  rolls.length === 0 && toast("No rolls have been added!")
+  rolls.forEach((roll) => {
+    if(roll.saved === false){
+      toast("Not all Rolls have been saved!")
+    } else {
+      const totalSum = rolls.reduce((sum, obj) => {
+        return sum + Number(obj.rollLength.replace(',', ''));
+}, 0);
 
-  console.log(totalSum);
+    localStorage.setItem("jobData", JSON.stringify(totalSum - Number(form.values.jobLength)))
+    } 
+  })
 }
-  
+    
   return (
     <Box className="page">
     <Box className='flex flex-row justify-between'>
@@ -105,9 +111,7 @@ function addTotalLength() {
         )) : null}
       </Flex>
       </Box>
-   
-
-
+  
       <Box mr={"100px"}>
         <Title>CO-</Title>
         <Title mb={2} size={16}>Total Footage Ran</Title>
@@ -115,8 +119,9 @@ function addTotalLength() {
           addTotalLength()
         })}>
         <Input mb={12} type='number' placeholder="Total Job Footage" {...form.getInputProps("jobLength")}/>
-        <Button bg={"blue"} type='submit'>End Job</Button>
+        <Button mb={20} bg={"blue"} type='submit'>End Job</Button>
         </form>
+      {<Box><Text>Roll length: {jobData}</Text></Box>}
       </Box>
       </Box>
     </Box>

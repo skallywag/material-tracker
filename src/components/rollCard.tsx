@@ -45,7 +45,7 @@ const RollCard: React.FC<RollCardProps> = (props) => {
 
  
   return (
-    <Box className="bg-primaryOrange max-w-72 rounded-md pt-8 pr-10 pl-10 pb-8">
+    <Box className="bg-primaryOrange max-w-72 rounded-md pt-6 pr-10 pl-10 pb-6">
       <Flex  mb={20} justify={"space-between"}>
       <Pill size={"lg"} bg={props.rollData.saved ? "green" : "red"}>{props.rollData.saved ? "Saved" : "Unsaved"}</Pill>
       <IconX
@@ -71,7 +71,7 @@ const RollCard: React.FC<RollCardProps> = (props) => {
         >
         <Input mb={10} placeholder="Item Number" {...form.getInputProps("rollItemNumber")} />
         <Input mb={12} placeholder="Roll Length" {...form.getInputProps("rollLength")}/>
-        <Button bg={'red'} type="submit">Save</Button>
+        <Button bg={'red'} type="submit">{props.rollData.saved ? "Update" : "Save"}</Button>
         </form>
       </Box>
     </Box>

@@ -36,7 +36,9 @@ const RejectRollModal: React.FC<RejectRollModal> = (props) => {
         <form onSubmit={form.onSubmit(() => {
             props.onReject({ 
               id: props.rollData.id,
-              rollLength: props.rollData.rollLength
+              rollLength: props.rollData.rollLength,
+              status: "Rejected",
+              complete: true
                 }, form.values.jobLength)
             props.close()
         })}>

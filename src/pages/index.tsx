@@ -19,6 +19,8 @@ export interface Roll {
   saved: boolean;
   rejected: boolean;
   rollNumber?: number;
+  complete: boolean;
+  rejectLength: '';
   rollItemNumber: '';
   rollLength: ''
 }
@@ -42,29 +44,6 @@ useEffect(() => {
   }
 }, []);
 
-
-function updateRoll(updatedRollData: Roll){
-  setRolls((prevRolls: Roll[]) => {
-    const updatedRolls = prevRolls.map(roll =>
-      roll.id === updatedRollData.id ? { ...roll, ...updatedRollData } : roll
-    );
-    localStorage.setItem('rolls', JSON.stringify(updatedRolls));
-    return updatedRolls;
-  });
-  toast("Roll Updated!")
-}
-
-function rejectRoll(updatedRollData: Roll){
-  setRolls((prevRolls: Roll[]) => {
-    const updatedRolls = prevRolls.map(roll =>
-      roll.id === updatedRollData.id ? { ...roll, ...updatedRollData } : roll
-    );
-    localStorage.setItem('rolls', JSON.stringify(updatedRolls));
-    return updatedRolls;
-  });
-  toast("Roll Rejected!")
-};
-
 const handleAddRoll = (): void => {
     setRolls((prevRolls: Roll[]) => { 
       const newRoll: Roll = {
@@ -74,6 +53,8 @@ const handleAddRoll = (): void => {
         rollNumber: rolls.length + 1,
         rollItemNumber: '',
         rollLength: '',
+        rejectLength: '',
+        complete: false
       };
 
       const updatedRolls: Roll[] = [...prevRolls, newRoll];
@@ -82,6 +63,38 @@ const handleAddRoll = (): void => {
     });
   };
 
+
+function updateRoll(updatedRollData: Roll){
+  setRolls((prevRolls: Roll[]) => {
+    const updatedRolls = prevRolls.map(roll =>
+      roll.id === updatedRollData.id ? { ...roll, ...updatedRollData } : roll
+    );
+    localStorage.setItem('rolls', JSON.stringify(updatedRolls));
+    toast("Roll Saved!")
+    return updatedRolls;
+  });
+}
+
+function rejectRoll(rollData: Roll, jobLength: string){ 
+      const totalSum = rolls.reduce((sum, obj) => {
+          return sum + Number(obj.rollLength.replace(',', '')) - Number(obj.rejectLength);
+      }, 0);  
+  
+  setRolls((prevRolls: Roll[]) => {
+    const updatedRolls = prevRolls.map(roll => {
+      if(roll.id === rollData.id && roll.rejected !== true){
+        
+        const rejectLength = Number(totalSum) - Number(jobLength)
+          return {...roll, rejectLength: rejectLength, rejected: true}
+      }
+      return roll
+    })
+    localStorage.setItem('rolls', JSON.stringify(updatedRolls));
+    toast("Roll Rejected!")
+    return updatedRolls;
+  });
+}
+
 function addTotalLength() {
   rolls.length === 0 && toast("No rolls have been added!")
   rolls.forEach((roll) => {
@@ -89,10 +102,12 @@ function addTotalLength() {
       toast("Not all Rolls have been saved!")
     } else {
       const totalSum = rolls.reduce((sum, obj) => {
-        return sum + Number(obj.rollLength.replace(',', ''));
-}, 0);
+          return sum + Number(obj.rollLength.replace(',', '')) - Number(obj.rejectLength);
+      }, 0);  
+    console.log(totalSum - Number(form.values.jobLength));
 
-    localStorage.setItem("jobData", JSON.stringify(totalSum - Number(form.values.jobLength)))
+
+    // localStorage.setItem("jobData", JSON.stringify(totalSum - Number(form.values.jobLength)))
     } 
   })
 }
@@ -126,7 +141,6 @@ function addTotalLength() {
       </Flex>
       </Box>
        <Flex direction="column" gap={8}>
-      <Text size='30px'>Rejected Rolls:</Text>
         
       </Flex>
       <Box mr={"100px"}>

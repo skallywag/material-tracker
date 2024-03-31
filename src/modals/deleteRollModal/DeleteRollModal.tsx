@@ -16,7 +16,7 @@ interface DeleteRollModal {
 }
 
 
-const HistoryPage: React.FC<DeleteRollModal> = (props) => {
+const DeleteRollModal: React.FC<DeleteRollModal> = (props) => {
   return (
     <Modal centered opened={props.opened} onClose={props.close} title={props.title}>
         <Text mb={10}>Are you sure you want to delete this roll?</Text>
@@ -27,4 +27,4 @@ const HistoryPage: React.FC<DeleteRollModal> = (props) => {
     </Modal>
   );
 };
-export default HistoryPage;
+export default DeleteRollModal;

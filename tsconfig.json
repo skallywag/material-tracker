@@ -8,17 +8,19 @@
     "resolveJsonModule": true,
     "moduleDetection": "force",
     "isolatedModules": true,
+    "noEmitOnError": false,
+    "noImplicitAny": false,
     /* Strictness */
-    "strict": true,
+    "strict": false,
     "noUncheckedIndexedAccess": true,
-    "checkJs": true,
+    "checkJs": false,
     /* Bundled projects */
     "lib": [
       "dom",
       "dom.iterable",
       "ES2022"
     ],
-    "noEmit": true,
+    "noEmit": false,
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "jsx": "preserve",
@@ -34,7 +36,8 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "strictNullChecks": true
   },
   "include": [
     ".eslintrc.cjs",

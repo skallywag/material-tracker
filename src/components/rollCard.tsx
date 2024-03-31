@@ -32,7 +32,7 @@ interface RollCardProps {
   rollData: RollData
   onDelete: () => void;
   onUpdate: (value) => void;
-  onReject: (value) => void;
+  onReject: (value, length) => void;
 }
 
 const RollCard: React.FC<RollCardProps> = (props) => {

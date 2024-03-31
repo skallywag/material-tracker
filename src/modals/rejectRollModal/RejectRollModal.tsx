@@ -14,7 +14,7 @@ interface RejectRollModal {
     title: string;
     opened: boolean;
     close: () => void;
-    onReject: (values) => void;
+    onReject: (values, length) => void;
     form: any;
     rollData: any;
 }

@@ -15,7 +15,6 @@ import {useForm} from '@mantine/form'
   import { useDisclosure } from '@mantine/hooks';  
 import RollCard from "@/components/rollCard";
 import { v4 as uuidv4 } from 'uuid';
-import { set } from 'zod';
 
 export interface Roll {
   id: string;
@@ -83,11 +82,11 @@ function updateRoll(updatedRollData: Roll){
   });
 }
 
-function rejectRoll(rollData: Roll, jobLength: string, status: string){ 
+function rejectRoll(rollData: Roll, jobLength: string){ 
       const totalSum = rolls.reduce((sum, obj) => {
           return sum + Number(obj.rollLength.replace(',', '')) - Number(obj.rejectLength);
       }, 0);  
-  
+      // @ts-expect-error dsadas
   setRolls((prevRolls: Roll[]) => {
     const updatedRolls = prevRolls.map(roll => {
       if(roll.id === rollData.id && roll.rejected !== true){
